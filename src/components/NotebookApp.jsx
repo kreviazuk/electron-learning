@@ -190,13 +190,23 @@ const NotebookApp = () => {
     saveTodos(updatedTodos);
   };
 
+  // 删除笔记
+  const handleDeleteNote = (noteId) => {
+    const updatedNotes = notes.filter(note => note.id !== noteId);
+    saveNotes(updatedNotes);
+  };
+
+  // 删除待办事项
+  const handleDeleteTodo = (todoId) => {
+    const updatedTodos = todos.filter(todo => todo.id !== todoId);
+    saveTodos(updatedTodos);
+  };
+
   return (
     <div className="app-container">
       <Sidebar
         currentView={currentView}
-        currentFilter={currentFilter}
         onViewChange={handleViewChange}
-        onFilterChange={handleFilterChange}
       />
       
       <MainContent
@@ -210,6 +220,9 @@ const NotebookApp = () => {
         onEditNote={handleEditNote}
         onEditTodo={handleEditTodo}
         onToggleTodo={handleToggleTodo}
+        onDeleteNote={handleDeleteNote}
+        onDeleteTodo={handleDeleteTodo}
+        onFilterChange={handleFilterChange}
       />
 
       {isNoteModalOpen && (

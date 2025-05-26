@@ -12,7 +12,10 @@ const MainContent = ({
   onAddNew,
   onEditNote,
   onEditTodo,
-  onToggleTodo
+  onToggleTodo,
+  onDeleteNote,
+  onDeleteTodo,
+  onFilterChange
 }) => {
   const getTitle = () => {
     const titles = {
@@ -32,6 +35,13 @@ const MainContent = ({
     return buttonTexts[currentView];
   };
 
+  const categories = [
+    { id: null, name: '全部', icon: '📋' },
+    { id: 'personal', name: '个人', icon: '👤' },
+    { id: 'work', name: '工作', icon: '💼' },
+    { id: 'study', name: '学习', icon: '📚' }
+  ];
+
   const renderContent = () => {
     switch (currentView) {
       case 'notes':
@@ -41,6 +51,7 @@ const MainContent = ({
             currentFilter={currentFilter}
             searchQuery={searchQuery}
             onEditNote={onEditNote}
+            onDeleteNote={onDeleteNote}
           />
         );
       case 'todos':
@@ -51,6 +62,7 @@ const MainContent = ({
             searchQuery={searchQuery}
             onEditTodo={onEditTodo}
             onToggleTodo={onToggleTodo}
+            onDeleteTodo={onDeleteTodo}
           />
         );
       case 'reminders':
@@ -85,6 +97,24 @@ const MainContent = ({
           </button>
         </div>
       </div>
+
+      {/* 分类筛选 - 只在笔记和待办事项页面显示 */}
+      {(currentView === 'notes' || currentView === 'todos') && (
+        <div className="filter-bar">
+          <div className="filter-tabs">
+            {categories.map(category => (
+              <button
+                key={category.id || 'all'}
+                className={`filter-tab ${currentFilter === category.id ? 'active' : ''}`}
+                onClick={() => onFilterChange(category.id)}
+              >
+                <span className="filter-icon">{category.icon}</span>
+                <span className="filter-text">{category.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       
       <div className="content-area">
         {renderContent()}

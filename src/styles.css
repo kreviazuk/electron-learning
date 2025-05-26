@@ -28,6 +28,16 @@ body {
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   padding: 20px;
   overflow-y: auto;
+  /* 允许拖动窗口 */
+  -webkit-app-region: drag;
+}
+
+/* 侧边栏内的可交互元素不能拖动窗口 */
+.sidebar .nav-item,
+.sidebar button,
+.sidebar input,
+.sidebar select {
+  -webkit-app-region: no-drag;
 }
 
 .sidebar-header h1 {
@@ -36,6 +46,8 @@ body {
   font-weight: 600;
   margin-bottom: 30px;
   text-align: center;
+  /* 标题区域可以拖动窗口 */
+  -webkit-app-region: drag;
 }
 
 .sidebar-section {
@@ -49,6 +61,8 @@ body {
   margin-bottom: 15px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  /* 分类标题可以拖动窗口 */
+  -webkit-app-region: drag;
 }
 
 .nav-list {
@@ -65,6 +79,8 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   color: rgba(255, 255, 255, 0.8);
+  /* 导航项不能拖动窗口 */
+  -webkit-app-region: no-drag;
 }
 
 .nav-item:hover {
@@ -105,18 +121,32 @@ body {
   padding: 30px 40px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background: rgba(255, 255, 255, 0.8);
+  /* 头部区域可以拖动窗口 */
+  -webkit-app-region: drag;
+}
+
+/* 头部的交互元素不能拖动窗口 */
+.content-header .search-box,
+.content-header .add-btn,
+.content-header button,
+.content-header input {
+  -webkit-app-region: no-drag;
 }
 
 .header-left h2 {
   color: #333;
   font-size: 28px;
   font-weight: 600;
+  /* 标题可以拖动窗口 */
+  -webkit-app-region: drag;
 }
 
 .header-right {
   display: flex;
   align-items: center;
   gap: 20px;
+  /* 右侧控件区域不能拖动窗口 */
+  -webkit-app-region: no-drag;
 }
 
 .search-box {
@@ -158,6 +188,61 @@ body {
   flex: 1;
   padding: 30px 40px;
   overflow-y: auto;
+  /* 内容区域不能拖动窗口 */
+  -webkit-app-region: no-drag;
+}
+
+/* 分类筛选栏 */
+.filter-bar {
+  padding: 0 40px 20px 40px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  /* 筛选栏不能拖动窗口 */
+  -webkit-app-region: no-drag;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.filter-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.filter-tab:hover {
+  background: rgba(102, 126, 234, 0.2);
+  transform: translateY(-1px);
+}
+
+.filter-tab.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.filter-icon {
+  font-size: 16px;
+}
+
+.filter-text {
+  font-size: 14px;
+  font-weight: 500;
 }
 
 /* 空状态 */
@@ -204,12 +289,46 @@ body {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
 .note-title {
   font-size: 18px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 12px;
   line-height: 1.4;
+  flex: 1;
+  margin-right: 12px;
+  margin-bottom: 0;
+}
+
+.note-delete-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: #999;
+  flex-shrink: 0;
+  /* 删除按钮不能拖动窗口 */
+  -webkit-app-region: no-drag;
+}
+
+.note-item:hover .note-delete-btn {
+  opacity: 1;
+}
+
+.note-delete-btn:hover {
+  background: #fee;
+  color: #f44336;
+  transform: scale(1.1);
 }
 
 .note-preview {
@@ -335,6 +454,8 @@ body {
   justify-content: center;
   z-index: 1000;
   backdrop-filter: blur(5px);
+  /* 模态框不能拖动窗口 */
+  -webkit-app-region: no-drag;
 }
 
 .modal-content {

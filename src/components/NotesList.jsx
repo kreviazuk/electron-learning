@@ -1,6 +1,6 @@
 import React from 'react';
 
-const NotesList = ({ notes, currentFilter, searchQuery, onEditNote }) => {
+const NotesList = ({ notes, currentFilter, searchQuery, onEditNote, onDeleteNote }) => {
   // 过滤笔记
   const filteredNotes = notes.filter(note => {
     // 分类过滤
@@ -46,6 +46,15 @@ const NotesList = ({ notes, currentFilter, searchQuery, onEditNote }) => {
     return names[category] || category;
   };
 
+  // 处理删除笔记
+  const handleDeleteNote = (e, noteId, noteTitle) => {
+    e.stopPropagation(); // 阻止事件冒泡，避免触发编辑
+    
+    if (window.confirm(`确定要删除笔记"${noteTitle}"吗？此操作无法撤销。`)) {
+      onDeleteNote(noteId);
+    }
+  };
+
   if (filteredNotes.length === 0) {
     return (
       <div className="empty-state">
@@ -63,7 +72,16 @@ const NotesList = ({ notes, currentFilter, searchQuery, onEditNote }) => {
           className="note-item"
           onClick={() => onEditNote(note)}
         >
-          <div className="note-title">{note.title}</div>
+          <div className="note-header">
+            <div className="note-title">{note.title}</div>
+            <button
+              className="note-delete-btn"
+              onClick={(e) => handleDeleteNote(e, note.id, note.title)}
+              title="删除笔记"
+            >
+              🗑️
+            </button>
+          </div>
           <div className="note-preview">
             {note.content.substring(0, 100)}
             {note.content.length > 100 ? '...' : ''}
