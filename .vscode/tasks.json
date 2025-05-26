@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "kill-electron",
+      "type": "process",
+      "command": "killall",
+      "args": ["Electron"],
+      "windows": {
+        "command": "taskkill",
+        "args": ["/F", "/IM", "electron.exe"]
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "runOptions": { "runOn": "default" }
+    }
+  ]
+} 
