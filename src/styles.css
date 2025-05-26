@@ -201,6 +201,23 @@ body {
   -webkit-app-region: no-drag;
 }
 
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.filter-section h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .filter-tabs {
   display: flex;
   gap: 8px;
@@ -346,6 +363,91 @@ body {
   font-size: 12px;
   color: #999;
   font-weight: 500;
+}
+
+/* 笔记优先级样式 */
+.note-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.note-priority-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: white;
+  font-weight: bold;
+  opacity: 0;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.note-item:hover .note-priority-badge {
+  opacity: 1;
+}
+
+.note-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.note-priority-text {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 优先级控件样式 */
+.priority-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.priority-checkboxes {
+  display: flex;
+  gap: 20px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #667eea;
+  cursor: pointer;
+}
+
+.checkbox-text {
+  color: #333;
+  user-select: none;
+}
+
+.priority-preview {
+  padding: 12px 20px;
+  border-radius: 12px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* 待办事项列表 */
@@ -638,4 +740,196 @@ body {
   .content-area {
     padding: 20px;
   }
+}
+
+/* 分类管理页面样式 */
+.categories-manager {
+  padding: 0;
+}
+
+.categories-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.categories-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.add-category-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.add-category-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border-radius: 12px;
+  padding: 20px 24px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.category-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.category-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.category-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.default-badge {
+  background: #e8f5e8;
+  color: #4caf50;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.category-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn,
+.delete-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+.edit-btn:hover {
+  background: #f0f8ff;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.delete-btn:hover {
+  background: #fee;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* 图标选择器样式 */
+.icon-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.icon-option {
+  width: 40px;
+  height: 40px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.icon-option:hover {
+  border-color: #667eea;
+  transform: scale(1.1);
+}
+
+.icon-option.selected {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  transform: scale(1.1);
+}
+
+/* 颜色选择器样式 */
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.color-picker input[type="color"] {
+  width: 50px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.color-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 } 

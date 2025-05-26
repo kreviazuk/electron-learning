@@ -1,11 +1,34 @@
 import React from 'react';
 
-const NotesList = ({ notes, currentFilter, searchQuery, onEditNote, onDeleteNote }) => {
+const NotesList = ({ notes, currentFilter, searchQuery, onEditNote, onDeleteNote, priorityFilter }) => {
   // 过滤笔记
   const filteredNotes = notes.filter(note => {
     // 分类过滤
     if (currentFilter && note.category !== currentFilter) {
       return false;
+    }
+    
+    // 优先级过滤
+    if (priorityFilter) {
+      const isImportant = note.isImportant || false;
+      const isUrgent = note.isUrgent || false;
+      
+      switch (priorityFilter) {
+        case 'urgent-important':
+          if (!isImportant || !isUrgent) return false;
+          break;
+        case 'important-not-urgent':
+          if (!isImportant || isUrgent) return false;
+          break;
+        case 'urgent-not-important':
+          if (isImportant || !isUrgent) return false;
+          break;
+        case 'not-urgent-not-important':
+          if (isImportant || isUrgent) return false;
+          break;
+        default:
+          break;
+      }
     }
     
     // 搜索过滤
@@ -46,6 +69,23 @@ const NotesList = ({ notes, currentFilter, searchQuery, onEditNote, onDeleteNote
     return names[category] || category;
   };
 
+  // 获取优先级信息
+  const getPriorityInfo = (note) => {
+    const isImportant = note.isImportant || false;
+    const isUrgent = note.isUrgent || false;
+    
+    if (isImportant && isUrgent) {
+      return { label: '重要且紧急', color: '#f44336', icon: '🔥' };
+    }
+    if (isImportant && !isUrgent) {
+      return { label: '重要不紧急', color: '#ff9800', icon: '⭐' };
+    }
+    if (!isImportant && isUrgent) {
+      return { label: '不重要但紧急', color: '#2196f3', icon: '⚡' };
+    }
+    return { label: '不重要不紧急', color: '#4caf50', icon: '📋' };
+  };
+
   // 处理删除笔记
   const handleDeleteNote = (e, noteId, noteTitle) => {
     e.stopPropagation(); // 阻止事件冒泡，避免触发编辑
@@ -66,31 +106,48 @@ const NotesList = ({ notes, currentFilter, searchQuery, onEditNote, onDeleteNote
 
   return (
     <div className="notes-list">
-      {filteredNotes.map(note => (
-        <div
-          key={note.id}
-          className="note-item"
-          onClick={() => onEditNote(note)}
-        >
-          <div className="note-header">
-            <div className="note-title">{note.title}</div>
-            <button
-              className="note-delete-btn"
-              onClick={(e) => handleDeleteNote(e, note.id, note.title)}
-              title="删除笔记"
-            >
-              🗑️
-            </button>
+      {filteredNotes.map(note => {
+        const priorityInfo = getPriorityInfo(note);
+        return (
+          <div
+            key={note.id}
+            className="note-item"
+            onClick={() => onEditNote(note)}
+          >
+            <div className="note-header">
+              <div className="note-title">{note.title}</div>
+              <div className="note-actions">
+                <div 
+                  className="note-priority-badge"
+                  style={{ backgroundColor: priorityInfo.color }}
+                  title={priorityInfo.label}
+                >
+                  {priorityInfo.icon}
+                </div>
+                <button
+                  className="note-delete-btn"
+                  onClick={(e) => handleDeleteNote(e, note.id, note.title)}
+                  title="删除笔记"
+                >
+                  🗑️
+                </button>
+              </div>
+            </div>
+            <div className="note-preview">
+              {note.content.substring(0, 100)}
+              {note.content.length > 100 ? '...' : ''}
+            </div>
+            <div className="note-meta">
+              <div className="note-date">
+                {formatDate(note.updatedAt)} • {getCategoryName(note.category)}
+              </div>
+              <div className="note-priority-text" style={{ color: priorityInfo.color }}>
+                {priorityInfo.label}
+              </div>
+            </div>
           </div>
-          <div className="note-preview">
-            {note.content.substring(0, 100)}
-            {note.content.length > 100 ? '...' : ''}
-          </div>
-          <div className="note-date">
-            {formatDate(note.updatedAt)} • {getCategoryName(note.category)}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

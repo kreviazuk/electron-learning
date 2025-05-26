@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const TodoModal = ({ todo, onSave, onClose }) => {
+const TodoModal = ({ todo, categories, onSave, onClose }) => {
   const [text, setText] = useState('');
   const [priority, setPriority] = useState('medium');
   const [category, setCategory] = useState('personal');
@@ -20,10 +20,10 @@ const TodoModal = ({ todo, onSave, onClose }) => {
     } else {
       setText('');
       setPriority('medium');
-      setCategory('personal');
+      setCategory(categories.length > 0 ? categories[0].id : 'personal');
       setReminder('');
     }
-  }, [todo]);
+  }, [todo, categories]);
 
   const formatDateTimeInput = (date) => {
     const year = date.getFullYear();
@@ -85,9 +85,11 @@ const TodoModal = ({ todo, onSave, onClose }) => {
           <div className="form-group">
             <label>分类</label>
             <select value={category} onChange={(e) => setCategory(e.target.value)}>
-              <option value="personal">个人</option>
-              <option value="work">工作</option>
-              <option value="study">学习</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.icon} {cat.name}
+                </option>
+              ))}
             </select>
           </div>
           

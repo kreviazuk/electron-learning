@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react';
 
-const NoteModal = ({ note, onSave, onClose }) => {
+const NoteModal = ({ note, categories, onSave, onClose }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('personal');
+  const [isUrgent, setIsUrgent] = useState(false);
+  const [isImportant, setIsImportant] = useState(false);
 
   useEffect(() => {
     if (note) {
       setTitle(note.title);
       setContent(note.content);
       setCategory(note.category);
+      setIsUrgent(note.isUrgent || false);
+      setIsImportant(note.isImportant || false);
     } else {
       setTitle('');
       setContent('');
-      setCategory('personal');
+      setCategory(categories.length > 0 ? categories[0].id : 'personal');
+      setIsUrgent(false);
+      setIsImportant(false);
     }
-  }, [note]);
+  }, [note, categories]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,8 +34,24 @@ const NoteModal = ({ note, onSave, onClose }) => {
     onSave({
       title: title.trim(),
       content: content.trim(),
-      category
+      category,
+      isUrgent,
+      isImportant
     });
+  };
+
+  const getPriorityLabel = () => {
+    if (isImportant && isUrgent) return '重要且紧急';
+    if (isImportant && !isUrgent) return '重要不紧急';
+    if (!isImportant && isUrgent) return '不重要但紧急';
+    return '不重要不紧急';
+  };
+
+  const getPriorityColor = () => {
+    if (isImportant && isUrgent) return '#f44336'; // 红色
+    if (isImportant && !isUrgent) return '#ff9800'; // 橙色
+    if (!isImportant && isUrgent) return '#2196f3'; // 蓝色
+    return '#4caf50'; // 绿色
   };
 
   return (
@@ -55,10 +77,39 @@ const NoteModal = ({ note, onSave, onClose }) => {
           <div className="form-group">
             <label>分类</label>
             <select value={category} onChange={(e) => setCategory(e.target.value)}>
-              <option value="personal">个人</option>
-              <option value="work">工作</option>
-              <option value="study">学习</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.icon} {cat.name}
+                </option>
+              ))}
             </select>
+          </div>
+
+          <div className="form-group">
+            <label>优先级设置</label>
+            <div className="priority-controls">
+              <div className="priority-checkboxes">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={isImportant}
+                    onChange={(e) => setIsImportant(e.target.checked)}
+                  />
+                  <span className="checkbox-text">重要</span>
+                </label>
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={isUrgent}
+                    onChange={(e) => setIsUrgent(e.target.checked)}
+                  />
+                  <span className="checkbox-text">紧急</span>
+                </label>
+              </div>
+              <div className="priority-preview" style={{ backgroundColor: getPriorityColor() }}>
+                {getPriorityLabel()}
+              </div>
+            </div>
           </div>
           
           <div className="form-group">

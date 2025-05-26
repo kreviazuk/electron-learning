@@ -8,15 +8,32 @@ const NotebookApp = () => {
   // 状态管理
   const [currentView, setCurrentView] = useState('notes');
   const [currentFilter, setCurrentFilter] = useState(null);
+  const [priorityFilter, setPriorityFilter] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [notes, setNotes] = useState([]);
   const [todos, setTodos] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [isTodoModalOpen, setIsTodoModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
   // 从本地存储加载数据
   useEffect(() => {
+    // 加载分类数据
+    const savedCategories = localStorage.getItem('categories');
+    if (savedCategories) {
+      setCategories(JSON.parse(savedCategories));
+    } else {
+      // 初始化默认分类
+      const defaultCategories = [
+        { id: 'personal', name: '个人', icon: '👤', color: '#667eea' },
+        { id: 'work', name: '工作', icon: '💼', color: '#f093fb' },
+        { id: 'study', name: '学习', icon: '📚', color: '#4facfe' }
+      ];
+      setCategories(defaultCategories);
+      localStorage.setItem('categories', JSON.stringify(defaultCategories));
+    }
+
     const savedNotes = localStorage.getItem('notes');
     const savedTodos = localStorage.getItem('todos');
     
@@ -29,7 +46,7 @@ const NotebookApp = () => {
         {
           id: 'note1',
           title: '欢迎使用每日记事本',
-          content: '这是一个功能强大的记事本应用，您可以：\n\n• 创建和管理笔记\n• 添加待办事项\n• 设置提醒\n• 按分类整理内容\n\n开始记录您的想法和计划吧！',
+          content: '这是一个功能强大的记事本应用，您可以：\n\n• 创建和管理笔记\n• 添加待办事项\n• 设置提醒\n• 按分类整理内容\n• 自定义分类\n\n开始记录您的想法和计划吧！',
           category: 'personal',
           createdAt: now,
           updatedAt: now
@@ -82,6 +99,11 @@ const NotebookApp = () => {
     localStorage.setItem('todos', JSON.stringify(newTodos));
   };
 
+  const saveCategories = (newCategories) => {
+    setCategories(newCategories);
+    localStorage.setItem('categories', JSON.stringify(newCategories));
+  };
+
   // 生成唯一ID
   const generateId = () => {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -91,11 +113,17 @@ const NotebookApp = () => {
   const handleViewChange = (view) => {
     setCurrentView(view);
     setCurrentFilter(null);
+    setPriorityFilter(null);
   };
 
   // 处理分类过滤
   const handleFilterChange = (filter) => {
     setCurrentFilter(currentFilter === filter ? null : filter);
+  };
+
+  // 处理优先级过滤
+  const handlePriorityFilterChange = (filter) => {
+    setPriorityFilter(priorityFilter === filter ? null : filter);
   };
 
   // 处理搜索
@@ -202,6 +230,52 @@ const NotebookApp = () => {
     saveTodos(updatedTodos);
   };
 
+  // 添加分类
+  const handleAddCategory = (categoryData) => {
+    const newCategory = {
+      id: generateId(),
+      ...categoryData
+    };
+    const updatedCategories = [...categories, newCategory];
+    saveCategories(updatedCategories);
+  };
+
+  // 编辑分类
+  const handleEditCategory = (categoryId, categoryData) => {
+    const updatedCategories = categories.map(category =>
+      category.id === categoryId
+        ? { ...category, ...categoryData }
+        : category
+    );
+    saveCategories(updatedCategories);
+  };
+
+  // 删除分类
+  const handleDeleteCategory = (categoryId) => {
+    // 将该分类下的笔记和待办事项移动到"个人"分类
+    const updatedNotes = notes.map(note =>
+      note.category === categoryId
+        ? { ...note, category: 'personal' }
+        : note
+    );
+    const updatedTodos = todos.map(todo =>
+      todo.category === categoryId
+        ? { ...todo, category: 'personal' }
+        : todo
+    );
+    
+    const updatedCategories = categories.filter(category => category.id !== categoryId);
+    
+    saveNotes(updatedNotes);
+    saveTodos(updatedTodos);
+    saveCategories(updatedCategories);
+    
+    // 如果当前筛选的是被删除的分类，清除筛选
+    if (currentFilter === categoryId) {
+      setCurrentFilter(null);
+    }
+  };
+
   return (
     <div className="app-container">
       <Sidebar
@@ -215,6 +289,7 @@ const NotebookApp = () => {
         searchQuery={searchQuery}
         notes={notes}
         todos={todos}
+        categories={categories}
         onSearch={handleSearch}
         onAddNew={handleAddNew}
         onEditNote={handleEditNote}
@@ -223,11 +298,17 @@ const NotebookApp = () => {
         onDeleteNote={handleDeleteNote}
         onDeleteTodo={handleDeleteTodo}
         onFilterChange={handleFilterChange}
+        onAddCategory={handleAddCategory}
+        onEditCategory={handleEditCategory}
+        onDeleteCategory={handleDeleteCategory}
+        priorityFilter={priorityFilter}
+        onPriorityFilterChange={handlePriorityFilterChange}
       />
 
       {isNoteModalOpen && (
         <NoteModal
           note={editingItem}
+          categories={categories}
           onSave={handleSaveNote}
           onClose={() => {
             setIsNoteModalOpen(false);
@@ -239,6 +320,7 @@ const NotebookApp = () => {
       {isTodoModalOpen && (
         <TodoModal
           todo={editingItem}
+          categories={categories}
           onSave={handleSaveTodo}
           onClose={() => {
             setIsTodoModalOpen(false);
