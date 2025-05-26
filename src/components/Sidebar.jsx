@@ -3,9 +3,7 @@ import React from 'react';
 const Sidebar = ({ currentView, onViewChange }) => {
   const views = [
     { id: 'notes', name: '我的笔记', icon: '📝' },
-    { id: 'todos', name: '待办事项', icon: '✅' },
     { id: 'categories', name: '分类管理', icon: '🏷️' },
-    { id: 'reminders', name: '提醒设置', icon: '⏰' }
   ];
 
   return (
