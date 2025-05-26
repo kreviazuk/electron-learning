@@ -4,25 +4,43 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    name: '每日记事本',
+    executableName: 'daily-notebook',
+    appBundleId: 'com.dailynotebook.app',
+    appCategoryType: 'public.app-category.productivity',
+    win32metadata: {
+      CompanyName: 'Daily Notebook',
+      FileDescription: '每日记事本 - 现代化笔记应用',
+      ProductName: '每日记事本'
+    }
   },
   rebuildConfig: {},
   makers: [
+    // Windows ZIP 包
     {
-      name: '@electron-forge/maker-squirrel',
-      config: {},
+      name: '@electron-forge/maker-zip',
+      platforms: ['win32'],
+      config: {
+        name: '每日记事本'
+      }
     },
+    // macOS ZIP 包
     {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin'],
+      config: {
+        name: '每日记事本'
+      }
     },
+    // macOS DMG 包
     {
-      name: '@electron-forge/maker-deb',
-      config: {},
-    },
-    {
-      name: '@electron-forge/maker-rpm',
-      config: {},
-    },
+      name: '@electron-forge/maker-dmg',
+      platforms: ['darwin'],
+      config: {
+        name: '每日记事本',
+        title: '每日记事本安装器'
+      }
+    }
   ],
   plugins: [
     {
