@@ -1,13 +1,40 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Electron 通信 Demo</title>
-  </head>
-  <body>
-    <h1>点击按钮开始通信</h1>
-    <button id="btn">发送消息给主进程</button>
-    <p id="reply"></p>
-    <script src="renderer.js"></script>
-  </body>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日记事本</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        }
+        
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <div class="loading">
+            正在加载应用...
+        </div>
+    </div>
+    
+    <script src="dist/bundle.js"></script>
+</body>
 </html>
